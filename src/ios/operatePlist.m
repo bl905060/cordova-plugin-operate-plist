@@ -10,23 +10,14 @@
 
 @implementation operatePlist
 
-+ (NSDictionary *)readPListWithFileName:(NSString *)fileName {
-    NSDictionary *info;
-    NSString *folderName = [[NSString alloc] init];
-    NSFileManager *file = [NSFileManager defaultManager];
-    NSString *errorStr = [[NSString alloc] init];
-    
-    NSString *filePath = [self GetPathByFolderName:folderName withFileName:fileName];
-    if (![file fileExistsAtPath:filePath]) {
-        errorStr = @"file is not exist!";
-    } else {
-        info = [[NSDictionary alloc] initWithContentsOfFile:filePath];
-    }
-    return info;
-}
-
-+ (void)writePListWithFileName:(NSString *)fileName withData:(NSDictionary *)info {
+- (void)writePlist:(CDVInvokedUrlCommand *)command {
     NSLog(@"begin to write Plist!");
+    
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = [command callbackId];
+    NSString *fileName = [command argumentAtIndex:0];
+    NSDictionary *info = [command argumentAtIndex:1];
+    
     NSString *folderName = [[NSString alloc] init];
     NSFileManager *file =[NSFileManager defaultManager];
     
@@ -40,10 +31,40 @@
     }
     
     [info writeToFile:filePath atomically:NO];
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+- (void)readPlist:(CDVInvokedUrlCommand *)command {
+    NSLog(@"begin to read Plist!");
+    
+    CDVPluginResult *pluginRestul;
+    NSString *callbackId = [command callbackId];
+    NSString *fileName = [command argumentAtIndex:0];
+    NSDictionary *info;
+    NSString *folderName = [[NSString alloc] init];
+    NSFileManager *file = [NSFileManager defaultManager];
+    NSString *errorStr = [[NSString alloc] init];
+    
+    NSString *filePath = [self GetPathByFolderName:folderName withFileName:fileName];
+    if (![file fileExistsAtPath:filePath]) {
+        errorStr = @"file is not exist!";
+    } else {
+        info = [[NSDictionary alloc] initWithContentsOfFile:filePath];
+    }
+    
+    if (errorStr) {
+        pluginRestul = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorStr];
+    } else {
+        pluginRestul = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:info];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginRestul callbackId:callbackId];
 }
 
 
-+ (NSString *)GetPathByFolderName:(NSString *)_folderName withFileName:(NSString *)_fileName {
+- (NSString *)GetPathByFolderName:(NSString *)_folderName withFileName:(NSString *)_fileName {
     NSLog(@"begin to generate file path!");
     
     NSError *error;

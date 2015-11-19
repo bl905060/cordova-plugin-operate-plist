@@ -6,11 +6,14 @@
 //  Copyright © 2015 LEIBI. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cordova/CDV.h>
 
-@interface operatePlist : NSObject
+@interface operatePlist : CDVPlugin
+{
+    
+}
 
-+ (void)writePListWithFileName:(NSString *)fileName withData:(NSDictionary *)info;
-+ (NSDictionary *)readPListWithFileName:(NSString *)fileName;
+- (void)writePlist:(CDVInvokedUrlCommand *)command;
+- (void)readPlist:(CDVInvokedUrlCommand *)command;
 
 @end
