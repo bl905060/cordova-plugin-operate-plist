@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+	id="cordova-plugin-operate-plist" version="0.0.1">
+
+<name>write or read plist file</name>
+
+<license>HDU</license>
+
+<keywords>plist,property list,user profile</keywords>
+
+<description>Native interface to write and read plist file.</description>
+
+<author>Leibi</author>
+
+<engines>
+	<engine name="cordova" version=">=3.3.0" />
+</engines>
+
+<js-module src="www/operatePlist.js" name="operatePlist.js">
+	<clobbers target="operatePlist" />
+</js-module>
+
+<!-- ios -->
+<platform name="ios">
+	<config-file target="config.xml" parent="/widget">
+		<feature name="operatePlist">
+			<param name="ios-package" value="operatePlist" />
+		</feature>
+	</config-file>
+
+	<header-file src="src/ios/operatePlist.h" />
+	<source-file src="src/ios/operatePlist.m" />
+</platform>
+</plugin>
