@@ -54,9 +54,11 @@
         info = [[NSDictionary alloc] initWithContentsOfFile:filePath];
     }
     
-    if (errorStr) {
+    if (errorStr.length > 0) {
+        NSLog(@"read plist is failure!");
         pluginRestul = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorStr];
     } else {
+        NSLog(@"read plist is OK!");
         pluginRestul = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:info];
     }
     

@@ -3,37 +3,27 @@ module.exports = {
     
     org_id : '',
     
-    read : function(fileName, successCallback, errorCallback) {
-        /*var photoURL = new Array();
-         var voiceURL = new Array();
-         
-         if ((postData.photoURL != undefined) && (postData.photoURL.length > 0)) {
-         photoURL = postData.photoURL;
-         }
-         if ((postData.voiceURL != undefined) && (postData.voiceURL.length > 0)) {
-         voiceURL = postData.voiceURL;
-         }*/
+    read : function(fileName, Callback, errorCallback) {
+        var that = this;
         
-        //alert("photoURL length: " + postData.photoURL.length);
-        //alert("photoURL: " + postData.photoURL);
-        //alert("voiceURL length: " + postData.voiceURL.length);
-        //alert("voiceURL: " + postData.voiceURL);
-        
-        //postData.photoURL = undefined;
-        //postData.voiceURL = undefined;
-        
-        cordova.exec(callback,
+        cordova.exec(successCallback,
                      errorCallback,
                      "operatePlist",
                      "readPlist",
                      [fileName]);
         
-        function callback(results) {
-            this.user_id = results.user_id;
-            this.org_id = results.org_id;
-            successCallback(results);
+        function successCallback(results) {
+            
+            if (results.user_id != undefined) {
+                that.user_id = results.user_id;
+            }
+            if (results.org_id != undefined) {
+                that.org_id = results.org_id;
+            }
+            Callback(results);
         }
     },
+    
     
     write : function(fileName, info, successCallback, errorCallback) {
         cordova.exec(successCallback,
