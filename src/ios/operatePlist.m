@@ -52,6 +52,7 @@
                         forKey:[allKeys objectAtIndex:i]];
     }
     if ([currentInfo writeToFile:filePath atomically:NO]) {
+        NSLog(@"write plist file is complete!");
         return YES;
     }
     else {
@@ -90,6 +91,7 @@
     NSString *filePath = [self GetPathByFolderName:folderName withFileName:fileName];
     if (![file fileExistsAtPath:filePath]) {
         errorStr = @"file is not exist!";
+        NSLog(@"%@", errorStr);
         [errorInfo setObject:errorStr forKey:@"errorStr"];
     }
     else {
@@ -97,6 +99,7 @@
     }
     
     if (errorStr.length == 0) {
+        NSLog(@"read plist file is complete!");
         return currentInfo;
     }
     else {

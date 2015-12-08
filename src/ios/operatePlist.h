@@ -14,6 +14,8 @@
 }
 
 - (void)writePlist:(CDVInvokedUrlCommand *)command;
+- (BOOL)write:(NSString *)fileName withInfo:(NSDictionary *)info;
 - (void)readPlist:(CDVInvokedUrlCommand *)command;
+- (NSDictionary *)read:(NSString *)fileName;
 
 @end
