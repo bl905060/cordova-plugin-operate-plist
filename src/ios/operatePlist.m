@@ -10,6 +10,47 @@
 
 @implementation operatePlist
 
+- (void)copyPlist:(CDVInvokedUrlCommand *)command {
+    NSLog(@"begin to copy plist file!");
+    
+    CDVPluginResult *result;
+    NSString *callbackID = [command callbackId];
+    NSError *error = nil;
+    NSFileManager *file = [NSFileManager defaultManager];
+    NSString *documentsDirectory = [[NSString alloc] init];
+    NSString *destPath = [[NSString alloc] init];
+    NSString *fileName = [[NSString alloc] init];
+    NSMutableDictionary *err = [NSMutableDictionary dictionaryWithCapacity:2];
+    if ([command argumentAtIndex:0] != nil) {
+        fileName = [NSString stringWithFormat:@"%@.plist", [command argumentAtIndex:0]];
+    }
+    else {
+        fileName = @"userinfo.plist";
+    }
+    
+    documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    destPath = [documentsDirectory stringByAppendingPathComponent:fileName];
+    
+    NSString *wwwDir = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"www"];
+    NSString *filePathFromApp = [wwwDir stringByAppendingPathComponent:fileName];
+    
+    if (!([file copyItemAtPath:filePathFromApp toPath:destPath error:&error])) {
+        NSLog(@"[sqlDB] Could not copy file from %@ to %@. Error = %@",filePathFromApp, destPath, error);
+        
+        NSInteger ecode = [error code];
+        
+        [err setObject:[NSNumber numberWithUnsignedInteger:ecode] forKey:@"code"];
+        
+        [err setObject:error.description forKey:@"message"];
+        
+        result = [CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR messageAsDictionary:err];
+    } else {
+        result =  [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"File Copied"];
+    }
+    
+    [self.commandDelegate sendPluginResult:result callbackId:callbackID];
+}
+
 - (void)writePlist:(CDVInvokedUrlCommand *)command {
     NSLog(@"begin to write Plist!");
     
@@ -44,7 +85,13 @@
         [file createFileAtPath:filePath contents:nil attributes:nil];
     }
     
-    NSMutableDictionary *currentInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+    NSMutableDictionary *currentInfo;
+    if ([[NSMutableDictionary alloc] initWithContentsOfFile:filePath] != nil) {
+        currentInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+    }
+    else {
+        currentInfo = [[NSMutableDictionary alloc] init];
+    }
     
     NSArray *allKeys = [info allKeys];
     for (int i = 0; i < [allKeys count]; i++) {
@@ -58,6 +105,38 @@
     else {
         return NO;
     }
+}
+
+- (BOOL)write:(NSString *)fileName withArray:(NSArray *)info {
+    
+    NSString *folderName = [[NSString alloc] init];
+    NSFileManager *file =[NSFileManager defaultManager];
+    
+    if ([info valueForKey:@"username"]) {
+        //folderName = [NSString stringWithFormat:@"/users/%@", [info valueForKey:@"username"]];
+    }
+    
+    NSString *filePath = [self GetPathByFolderName:folderName withFileName:fileName];
+    if (![file fileExistsAtPath:filePath]) {
+        [file createFileAtPath:filePath contents:nil attributes:nil];
+    }
+    
+    /*NSMutableArray *currentInfo = [[NSMutableArray alloc] initWithContentsOfFile:filePath];
+    
+    NSArray *allKeys = [info allKeys];
+    for (int i = 0; i < [allKeys count]; i++) {
+        [currentInfo setObject:[info objectForKey:[allKeys objectAtIndex:i]]
+                        forKey:[allKeys objectAtIndex:i]];
+    }*/
+    
+    if ([info writeToFile:filePath atomically:YES]) {
+        NSLog(@"write plist file is complete!");
+        return YES;
+    }
+    else {
+        return NO;
+    }
+
 }
 
 - (void)readPlist:(CDVInvokedUrlCommand *)command {

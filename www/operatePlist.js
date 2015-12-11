@@ -3,6 +3,14 @@ module.exports = {
     
     org_id : '',
     
+    copy : function(fileName, successCallback, errorCallback){
+        cordova.exec(successCallback,
+                     errorCallback,
+                     "operatePlist",
+                     "copyPlist",
+                     [fileName]);
+    },
+    
     read : function(fileName, Callback, errorCallback) {
         var that = this;
         
@@ -23,7 +31,6 @@ module.exports = {
             Callback(results);
         }
     },
-    
     
     write : function(fileName, info, successCallback, errorCallback) {
         cordova.exec(successCallback,
