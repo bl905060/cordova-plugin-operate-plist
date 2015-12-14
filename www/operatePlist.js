@@ -16,6 +16,7 @@ module.exports = {
         var flag = 0;
         if (typeof(handler1) !== "string") {
             fileName = "userinfo";
+            flag = 1;
         }
         else {
             fileName = handler1;
