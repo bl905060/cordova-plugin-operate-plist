@@ -45,6 +45,10 @@ function readSuccess(responseData) {
     alert(responseData.user_email);
     alert(responseData.org_id);
 }
+
+function readFail() {
+//do something
+}
 ```
 
 ### 拷贝Plist文件
