@@ -25,6 +25,9 @@ var userinfo = {
 
 //传入文件名以及需要写入的对象
 operatePlist.write("userinfo", userinfo);
+
+//只传入需要写入的对象则默认写入userinfo.plist文件
+operatePlist.write(userinfo);
 ```
 
 ### 读取Plist文件
@@ -32,6 +35,9 @@ operatePlist.write("userinfo", userinfo);
 ```js
 //传入需要读取的Plist文件的文件名，以及成功回调函数
 operatePlist.read("userinfo", readSuccess, readFail);
+
+//只传入回调函数则默认读取userinfo.plist文件
+operatePlist.read(readSuccess, readFail);
 
 function readSuccess(responseData) {
     alert(responseData.user_id);
