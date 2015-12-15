@@ -3,23 +3,23 @@ module.exports = {
     
     org_id : '',
     
-    copy : function(fileName, successCallback, errorCallback){
-        cordova.exec(successCallback,
-                     errorCallback,
+    copy : function(fileName, successHandler, errorHandler){
+        cordova.exec(successHandler,
+                     errorHandler,
                      "operatePlist",
                      "copyPlist",
                      [fileName]);
     },
     
-    read : function(handler1, handler2, handler3) {
+    read : function(param1, param2, param3) {
         var that = this;
         var flag = 0;
-        if (typeof(handler1) !== "string") {
+        if (typeof(param1) !== "string") {
             fileName = "userinfo";
             flag = 1;
         }
         else {
-            fileName = handler1;
+            fileName = param1;
         }
         
         cordova.exec(successHandler,
@@ -36,34 +36,34 @@ module.exports = {
                 that.org_id = results.org_id;
             }
             if (flag) {
-                handler1(results);
+                param1(results);
             }
             else {
-                handler2(results);
+                param2(results);
             }
         }
         
         function errorHandler() {
             if (flag) {
-                handler2(results);
+                param2();
             }
             else {
-                handler3(results);
+                param3();
             }
 
         }
     },
     
-    write : function(handler1, handler2, handler3, handler4) {
+    write : function(param1, param2, param3, param4) {
         var flag = 0;
-        if (typeof(handler1) !== "string") {
+        if (typeof(param1) !== "string") {
             fileName = "userinfo";
-            info = handler1;
+            info = param1;
             flag = 1;
         }
         else {
-            fileName = handler1;
-            info = handler2;
+            fileName = param1;
+            info = param2;
         }
         
         cordova.exec(successHandler,
@@ -74,19 +74,19 @@ module.exports = {
         
         function successHandler () {
             if (flag) {
-                handler2();
+                param2();
             }
             else {
-                handler3();
+                param3();
             }
         }
         
         function errorHandler () {
             if (flag) {
-                handler3();
+                param3();
             }
             else {
-                handler4();
+                param4();
             }
         }
     }
